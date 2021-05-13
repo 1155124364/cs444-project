@@ -1,5 +1,9 @@
 ScriptsOnlyBuild:
   usedScripts:
+    Assembly-CSharp.dll:
+    - HandController
+    - ONSPSettings
+    - ObjectAnchor
     Oculus.VR.Editor.dll:
     - Assets.Oculus.VR.Editor.OVRPlatformToolSettings
     - OVRConfig
@@ -46,10 +50,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
-    - Class: 54
-      Script: {instanceID: 0}
-    - Class: 64
-      Script: {instanceID: 0}
     - Class: 65
       Script: {instanceID: 0}
     - Class: 74
@@ -67,25 +67,31 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1856}
+      Script: {instanceID: 1858}
     - Class: 114
-      Script: {instanceID: 1920}
+      Script: {instanceID: 1922}
     - Class: 114
-      Script: {instanceID: 1938}
+      Script: {instanceID: 1940}
     - Class: 114
-      Script: {instanceID: 2090}
+      Script: {instanceID: 2092}
     - Class: 114
-      Script: {instanceID: 2132}
+      Script: {instanceID: 2134}
     - Class: 114
-      Script: {instanceID: 3866}
+      Script: {instanceID: 3870}
     - Class: 114
-      Script: {instanceID: 4088}
+      Script: {instanceID: 4092}
     - Class: 114
-      Script: {instanceID: 4112}
+      Script: {instanceID: 4116}
     - Class: 114
-      Script: {instanceID: 4262}
+      Script: {instanceID: 4266}
     - Class: 114
-      Script: {instanceID: 4744}
+      Script: {instanceID: 4734}
+    - Class: 114
+      Script: {instanceID: 4748}
+    - Class: 114
+      Script: {instanceID: 22966}
+    - Class: 114
+      Script: {instanceID: 22970}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 137
@@ -433,6 +439,12 @@ ScriptsOnlyBuild:
     assemblyName: Oculus.Platform.dll
     namespaceName: Oculus.Platform.Samples.VrHoops
     className: DetectBasket
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MainPlayerController
   - hash:
       serializedVersion: 2
       Hash: d29554da4f32756eaad6ec0d568c5648
@@ -1741,6 +1753,18 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: OculusSampleFramework
     className: TrackSegment
+  - hash:
+      serializedVersion: 2
+      Hash: 1e90794daadfb0b37f6ba182a53194e1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HandController
+  - hash:
+      serializedVersion: 2
+      Hash: fb6bf5b2cd3f0209abeda54fc6f878f6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ObjectAnchor
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
