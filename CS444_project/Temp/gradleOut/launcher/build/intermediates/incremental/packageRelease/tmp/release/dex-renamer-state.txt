@@ -1,4 +1,0 @@
-#Wed May 12 14:37:45 PDT 2021
-base.0=Z\:\\CS444_project\\Temp\\gradleOut\\launcher\\build\\intermediates\\dex\\release\\out\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex

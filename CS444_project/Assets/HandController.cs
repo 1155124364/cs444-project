@@ -18,9 +18,14 @@ public class HandController : MonoBehaviour {
 	// N.B. This list is static as it is the same list for all hands controller
 	// thus there is no need to duplicate it for each instance
 	static protected ObjectAnchor[] anchors_in_the_scene;
+
+	static protected EBike eBike;
+
 	void Start () {
 		// Prevent multiple fetch
 		if ( anchors_in_the_scene == null ) anchors_in_the_scene = GameObject.FindObjectsOfType<ObjectAnchor>();
+		if (playerController == null) playerController = GameObject.FindObjectOfType<MainPlayerController>();
+		if (eBike == null) eBike = GameObject.FindObjectOfType<EBike>();
 	}
 
 
@@ -44,8 +49,64 @@ public class HandController : MonoBehaviour {
 
 
 	// Automatically called at each frame
-	void Update () { handle_controller_behavior(); }
+	void Update () {
+		triggerBehavior();
+		if (playerController.isOnBike()) {
+			moveWithBike();
+		}
+		handle_controller_behavior();
+	}
 
+	protected bool triggerPulledPreviousFrame = false;
+
+	protected void triggerBehavior() {
+		bool triggerPulled = false;
+		if (handType == HandType.LeftHand) triggerPulled = (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger) > 0.5);
+		else triggerPulled = (OVRInput.Get(OVRInput.Axis1D.SecondaryIndexTrigger) > 0.5);
+		if (triggerPulled == triggerPulledPreviousFrame) return;
+		triggerPulledPreviousFrame = triggerPulled;
+
+		if (triggerPulled) {
+			Debug.LogWarning("trigger pulled!");
+			if (playerController.isOnBike()) {
+				checkGetOffBike();
+			} else {
+				checkGetOnBike();
+			}
+		}
+	}
+
+	protected void checkGetOnBike() {
+		float bikeDistance = Vector3.Distance(this.transform.position, eBike.transform.position);
+		Debug.LogWarningFormat("bikeDistance = {0}", bikeDistance);
+		if (bikeDistance < 1.5f) playerController.rideBike();
+	}
+
+	protected void checkGetOffBike() {
+		playerController.getOffBike();
+	}
+
+	protected void moveWithBike() {
+		if (handType != HandType.RightHand) return;
+		Vector3 handle = new Vector3(0.0f, 0.7071067812f, 0.7071067812f);
+		Vector3 handleN = new Vector3(0.0f, -0.7071067812f, 0.7071067812f);
+		Quaternion rawRotation = this.transform.rotation;
+		Vector3 handleDir = rawRotation * handle;
+		Vector3 handleNDir = rawRotation * handleN;
+		if ((handleDir.y > -0.2) && (handleDir.y < 0.2)) {
+			Quaternion ort = playerController.transform.rotation;
+			Vector3 ortEuler = ort.eulerAngles;
+			ortEuler.z = ortEuler.x = 0f;
+			ort = Quaternion.Euler(ortEuler);
+			if (handleNDir.y < -0.1f) {
+				if (handleNDir.y > -1f + 1e-7) handleNDir.y = (float) (-1f + 1e-7);
+				float theta = Mathf.Asin(-handleNDir.y) / Mathf.PI * 2;
+				//Debug.LogWarningFormat("HandController: handle {0}, handleNormal {1}, theta {2}", handleDir, handleNDir, theta);
+				Vector3 move = ort * (0.1f * theta * Vector3.forward);
+				playerController.transform.position += move;
+			}
+		}
+	}
 
 	// Store the previous state of triggers to detect edges
 	protected bool is_hand_closed_previous_frame = false;
