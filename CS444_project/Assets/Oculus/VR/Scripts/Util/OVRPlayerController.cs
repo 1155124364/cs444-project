@@ -280,6 +280,10 @@ public class OVRPlayerController : MonoBehaviour
 		else
 			FallSpeed += ((Physics.gravity.y * (GravityModifier * 0.002f)) * SimulationRate * Time.deltaTime);
 
+		if (!EnableLinearMovement) FallSpeed = 0.0f;
+
+		//Debug.LogWarningFormat("FallSpeed : {0}", FallSpeed);
+
 		moveDirection.y += FallSpeed * SimulationRate * Time.deltaTime;
 
 
@@ -298,8 +302,11 @@ public class OVRPlayerController : MonoBehaviour
 
 		Vector3 predictedXZ = Vector3.Scale((Controller.transform.localPosition + moveDirection), new Vector3(1, 0, 1));
 
+		//Debug.LogWarningFormat("moveDirection : {0}", moveDirection);
+
 		// Move contoller
 		Controller.Move(moveDirection);
+		//Controller.transform.position += moveDirection;
 		Vector3 actualXZ = Vector3.Scale(Controller.transform.localPosition, new Vector3(1, 0, 1));
 
 		if (predictedXZ != actualXZ)
@@ -344,8 +351,8 @@ public class OVRPlayerController : MonoBehaviour
 				MoveScale = 0.70710678f;
 
 			// No positional movement if we are in the air
-			if (!Controller.isGrounded)
-				MoveScale = 0.0f;
+			// if (!Controller.isGrounded)
+				// MoveScale = 0.0f;
 
 			MoveScale *= SimulationRate * Time.deltaTime;
 
@@ -469,6 +476,8 @@ public class OVRPlayerController : MonoBehaviour
 				}
 				euler.y += secondaryAxis.x * rotateInfluence;
 			}
+
+			Debug.LogWarningFormat("rotation: {0}", euler);
 
 			transform.rotation = Quaternion.Euler(euler);
 		}
