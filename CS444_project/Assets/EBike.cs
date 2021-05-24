@@ -44,6 +44,7 @@ public class EBike : MonoBehaviour
     void Update()
     {
         //Debug.LogWarningFormat("{0} collider(s) found!", subColliders.Length);
+        //Debug.LogWarningFormat("bike Position: {0}", this.transform.position);
         if (mainPlayerController != null) {
             Vector3 mainPosition = mainPlayerController.transform.position;
             Vector3 mainRotation = mainPlayerController.transform.rotation.eulerAngles;
