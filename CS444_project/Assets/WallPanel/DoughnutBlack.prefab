@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7320025573484740002}
   m_Layer: 0
   m_Name: DoughnutBlack
-  m_TagString: Untagged
+  m_TagString: Slicable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

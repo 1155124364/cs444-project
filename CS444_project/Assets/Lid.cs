@@ -94,6 +94,6 @@ public class Lid : MonoBehaviour
             reset.y = 10f;
             this.transform.position = reset;
         }
-        Debug.LogWarningFormat("lid position {0}", this.transform.position);
+        //Debug.LogWarningFormat("lid position {0}", this.transform.position);
     }
 }

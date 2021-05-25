@@ -75,6 +75,7 @@ public class HandController : MonoBehaviour {
 			hasOrt = false;
 		}
 		// handle_controller_behavior();
+		anchors_in_the_scene = GameObject.FindObjectsOfType<ObjectAnchor>();
 	}
 
 	protected bool triggerPulledPreviousFrame = false;
