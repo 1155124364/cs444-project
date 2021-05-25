@@ -1,3 +1,8 @@
+/*
+    MainPlayController.cs
+    Description: Control the movement of the game character in two situations(on e-bike or not) and how to get on and off the e-bike.
+*/
+
 using UnityEngine;
 
 public class MainPlayerController : MonoBehaviour {
@@ -24,7 +29,6 @@ public class MainPlayerController : MonoBehaviour {
 	}
 
 	public void myMoveTo(Vector3 moveToPosition) {
-		//Debug.LogWarningFormat("move to {0}", moveToPosition);
 		Controller.transform.position = moveToPosition;
 	}
 
@@ -44,7 +48,6 @@ public class MainPlayerController : MonoBehaviour {
 	public void getOffBike() {
 		onBike = false;
 		Controller.detectCollisions = true;
-		//Debug.LogWarningFormat("{0} controller collider(s) found!", controllerColliders.Length);
 		for (int i = 0; i < controllerColliders.Length; i++) {
 			controllerColliders[i].enabled = true;
 		}
@@ -54,11 +57,9 @@ public class MainPlayerController : MonoBehaviour {
 		Vector3 delta = mainPosition - this.transform.position;
 		myMoveTo(mainPosition);
 		this.transform.position = mainPosition;
-		// Debug.LogWarningFormat("Controller detect: {0}, Controller Collider: {1}", Controller.detectCollisions, Controller.GetComponent<Collider>().enabled);
 		unlockDefaultMovement();
 		myMoveTo(mainPosition);
 		this.transform.position = mainPosition;
-		//PlayerController.Teleported = true;
 		Controller.Move(delta);
 	}
 
@@ -74,16 +75,6 @@ public class MainPlayerController : MonoBehaviour {
 		if (eBike == null) {
 			eBike = GameObject.FindObjectOfType<EBike>();
 		}
-
-		//rideBike();
 	}
-
-	void Update() {
-		//Debug.LogWarningFormat("Controller position: {0}", Controller.transform.position);
-		//Debug.LogWarningFormat("Main position: {0}", this.transform.position);
-		//Debug.LogWarningFormat("isGrounded: {0}", Controller.isGrounded);
-		// Debug.LogWarningFormat("Main position: {0}, rotation: {1}", this.transform.position, this.transform.rotation);
-	}
-
 }
 

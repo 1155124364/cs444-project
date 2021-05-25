@@ -1,3 +1,8 @@
+/*
+    Lid.cs
+    Description: Control the pop-up message in front of the player.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

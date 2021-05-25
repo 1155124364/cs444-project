@@ -1,3 +1,8 @@
+/*
+    Slicer.cs
+    Description: Control the cutting function in the game.
+*/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +24,8 @@ public class Slicer : MonoBehaviour {
         public void matchDirection(Vector3 direction) {
             if (Vector3.Dot(getNormal(), direction) > 0) {
                 return;
-            }else {
+            }
+            else {
                 Vector3 vec = v1;
                 v1 = v3;
                 v3 = vec;
@@ -28,12 +34,10 @@ public class Slicer : MonoBehaviour {
     }
 
 
-    //When there is a collision
+    // When there is a collision
     void OnCollisionEnter(Collision other) {
-    	//print ("Knife collided with" + other.collider.gameObject.name);
         time_diff = Time.time - old_time;
         if (time_diff >= 1 && other.gameObject.tag == "Slicable") {
-            //Debug.LogWarningFormat("Time diff: " + time_diff);
             slice(other);
             old_time = Time.time;
         }
@@ -51,10 +55,10 @@ public class Slicer : MonoBehaviour {
 
         Plane plane = new Plane(vec1, vec2, vec3);
 
-        //Transform attached to the rigid body (transform of the body we hit)
+        // Transform attached to the rigid body (transform of the body we hit)
         Transform tr = other.transform;
 
-        //Mesh of the object we collided
+        // Mesh of the object we collided
         Mesh m = other.gameObject.GetComponent<MeshFilter>().mesh;
         int[] triangles = m.triangles;
         Vector3[] verts = m.vertices;
@@ -67,7 +71,7 @@ public class Slicer : MonoBehaviour {
         for (int i = 0; i < triangles.Length; i += 3) {
             List<Vector3> triangleIntersections = new List<Vector3>();
 
-            //Retrive the vertices of each triangle and transform them from local to world space
+            // Retrive the vertices of each triangle and transform them from local to world space
             Vector3 v1 = tr.TransformPoint(verts[triangles[i]]);
             Vector3 v2 = tr.TransformPoint(verts[triangles[i + 1]]);
             Vector3 v3 = tr.TransformPoint(verts[triangles[i + 2]]);
@@ -220,7 +224,7 @@ public class Slicer : MonoBehaviour {
             List<Vector3> tris = new List<Vector3>();
             List<int> indices = new List<int>();
 
-            //Create the two new meshes for the two parts of the cutted object
+            // Create the two new meshes for the two parts of the cutted object
             Mesh meshAbove = new Mesh();
             Mesh meshBelow = new Mesh();
 
@@ -257,7 +261,7 @@ public class Slicer : MonoBehaviour {
             meshBelow.RecalculateNormals();
             meshBelow.RecalculateBounds();
 
-            //Create gameObject above the plane
+            // Create gameObject above the plane
             Material mat = other.gameObject.GetComponent<MeshRenderer>().material;
             CountableItem oldCountableItem = other.gameObject.GetComponent<CountableItem>();
 
@@ -277,12 +281,12 @@ public class Slicer : MonoBehaviour {
 
             CountableItem.CountableType oldCountableType = oldCountableItem.countableType;
 
-//            gameObjectAbove.AddComponent<ObjectAnchor>();
+            // Example: gameObjectAbove.AddComponent<ObjectAnchor>();
 
             gameObjectAbove.AddComponent<CountableItem>();
             gameObjectAbove.GetComponent<CountableItem>().countableType = oldCountableType;
 
-            //Create gameObject above below the plane
+            // Create gameObject above below the plane
             GameObject gameObjectBelow = new GameObject();
 
             gameObjectBelow.AddComponent<MeshFilter>();
@@ -296,8 +300,6 @@ public class Slicer : MonoBehaviour {
             gameObjectBelow.GetComponent<MeshCollider>().sharedMesh = meshBelow;
 
             gameObjectBelow.AddComponent<Rigidbody>();
-
-//            gameObjectBelow.AddComponent<ObjectAnchor>();
 
             gameObjectBelow.AddComponent<CountableItem>();
             gameObjectBelow.GetComponent<CountableItem>().countableType = oldCountableType;

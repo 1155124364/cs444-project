@@ -1,3 +1,8 @@
+/*
+    LidTrigger.cs
+    Description: Control the pop-up message in front of the player.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,14 +19,7 @@ public class LidTrigger : MonoBehaviour
     void OnTriggerStay(Collider other) {
         Lid lid = other.GetComponent<Lid>();
         if (lid != null) {
-            //Debug.LogWarningFormat("Container {0} triggered by Lid {1}!", this.name, lid.name);
             lid.setOnBox(container);
         }
-    }
-    
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
