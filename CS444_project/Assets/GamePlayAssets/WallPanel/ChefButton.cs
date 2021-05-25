@@ -1,6 +1,6 @@
 /*
     ChefButton.cs
-    Description: class for buttons on the Chef panel page. One button for one item. When selected, it will ask the chef to make a corresponding item.
+    Description: Class for buttons on the Chef panel page. One button for one item. When selected, it will ask the chef to make a corresponding item.
 */
 
 using System.Collections;
