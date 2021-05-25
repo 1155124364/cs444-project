@@ -1,10 +1,15 @@
+/*
+    WallPanelController.cs
+    Description: Control the function of wall panel.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WallPanelController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Store the item prefab corresponding to this button.
     [Header("Default Panel Prefab")]
     public GameObject defaultPanelPrefab;
     
@@ -13,6 +18,7 @@ public class WallPanelController : MonoBehaviour
     public Chef chef;
     public OrderController orderController;
 
+    // Set initial state of wall panel
     public void setWallPanel(GameObject panelPrefab) {
         if (panelPrefab == null) return;
         if (wallPanel != null) {
@@ -25,7 +31,8 @@ public class WallPanelController : MonoBehaviour
             wallButtons[i].initialize(this);
         }
     }
-    
+
+    // Assign each button its corresponding function.
     void Start()
     {
         chef = GameObject.FindObjectOfType<Chef>();
@@ -33,9 +40,4 @@ public class WallPanelController : MonoBehaviour
         setWallPanel(defaultPanelPrefab);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
