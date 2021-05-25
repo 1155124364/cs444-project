@@ -12,6 +12,7 @@ public class MainPlayerController : MonoBehaviour {
 	protected CharacterController Controller = null;
 	protected EBike eBike = null;
 	protected Collider[] controllerColliders;
+	protected MessageController messageController;
 	
 	// Store whether the player is on the bike.
 	protected bool onBike = false;
@@ -99,6 +100,10 @@ public class MainPlayerController : MonoBehaviour {
 		if (eBike == null) {
 			eBike = GameObject.FindObjectOfType<EBike>();
 		}
+		if (messageController == null) {
+			messageController = GameObject.FindObjectOfType<MessageController>();
+		}
+		messageController.popMessage("Press B or Y button to enable the beamer.\nPress index trigger for grab/press button");
 	}
-	
+
 }

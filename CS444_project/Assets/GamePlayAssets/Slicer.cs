@@ -264,6 +264,7 @@ public class Slicer : MonoBehaviour {
             // Create gameObject above the plane
             Material mat = other.gameObject.GetComponent<MeshRenderer>().material;
             CountableItem oldCountableItem = other.gameObject.GetComponent<CountableItem>();
+            CountableItem.CountableType oldCountableType = oldCountableItem.countableType;
 
             GameObject gameObjectAbove = new GameObject();
 
@@ -278,8 +279,6 @@ public class Slicer : MonoBehaviour {
             gameObjectAbove.GetComponent<MeshCollider>().sharedMesh = meshAbove;
 
             gameObjectAbove.AddComponent<Rigidbody>();
-
-            CountableItem.CountableType oldCountableType = oldCountableItem.countableType;
 
             // Example: gameObjectAbove.AddComponent<ObjectAnchor>();
 
