@@ -1,3 +1,8 @@
+/*
+    StatusText.cs
+    Description: show the information of the order which taken by player and the number of the finished order(s) by player.
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,10 +19,11 @@ public class StatusText : MonoBehaviour
         orderController = GameObject.FindObjectOfType<OrderController>();
     }
 
+    // Setting of cake types and destination
     protected string[] destinationName = new string[6] {"Post Office", "Bank", "Commercial Center", "Police Station", "Office Building", "Apartment"};
     protected string[] itemName = new string[3] {"Cupcake", "Croissant", "Doughnut"};
 
-    // Update is called once per frame
+    // every time player finish an order, the taken order information shown in the status will become none, and Finished order count will +1.
     void Update()
     {
         if (orderController == null) {
