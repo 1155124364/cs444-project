@@ -25,7 +25,7 @@ public class Lid : MonoBehaviour
 
         this.transform.position = container.transform.position;
         this.transform.rotation = container.transform.rotation;
-        Vector3 y = new Vector3(0f, 0.35f, 0f);
+        Vector3 y = new Vector3(0f, 0.36f, 0f);
         this.transform.position += container.transform.rotation * y;
         this.transform.SetParent(container.transform);
         this.container = container;
@@ -81,6 +81,19 @@ public class Lid : MonoBehaviour
                 flyingFrame--;
             }
         }
-        //Debug.LogWarningFormat("lid position {0}", this.transform.position);
+        else if (onBox) {
+            this.transform.position = container.transform.position;
+            this.transform.rotation = container.transform.rotation;
+            Vector3 y = new Vector3(0f, 0.36f, 0f);
+            this.transform.position += container.transform.rotation * y;
+            this.transform.SetParent(container.transform);
+            this.container = container;
+        }
+        if (this.transform.position.y < -10f) {
+            Vector3 reset = this.transform.position;
+            reset.y = 10f;
+            this.transform.position = reset;
+        }
+        Debug.LogWarningFormat("lid position {0}", this.transform.position);
     }
 }

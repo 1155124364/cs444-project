@@ -28,6 +28,7 @@ public class HandController : MonoBehaviour {
 		if ( anchors_in_the_scene == null ) anchors_in_the_scene = GameObject.FindObjectsOfType<ObjectAnchor>();
 		if (playerController == null) playerController = GameObject.FindObjectOfType<MainPlayerController>();
 		if (eBike == null) eBike = GameObject.FindObjectOfType<EBike>();
+		if (orderController == null) orderController = GameObject.FindObjectOfType<OrderController>();
 		originalPointingDirection = new Vector3(0f, 1f, 1f);
 		originalPointingDirection.Normalize();
 
@@ -62,12 +63,16 @@ public class HandController : MonoBehaviour {
 		recentPosition[0] = this.transform.position;
 
 		buttonBYBehavior();
+		buttonABehavior();
+		buttonXBehavior();
 		if (remoteGrab) {
 			remoteGrabUI();
 		}
 		triggerBehavior();
 		if (playerController.isOnBike()) {
 			moveWithBike();
+		} else {
+			hasOrt = false;
 		}
 		// handle_controller_behavior();
 	}
@@ -75,6 +80,8 @@ public class HandController : MonoBehaviour {
 	protected bool triggerPulledPreviousFrame = false;
 
 	protected bool buttonBYPressedPreviousFrame = false;
+	protected bool buttonAPressedPreviousFrame = false;
+	protected bool buttonXPressedPreviousFrame = false;
 	protected bool remoteGrab = false;
 
 
@@ -148,6 +155,32 @@ public class HandController : MonoBehaviour {
 		}
 	}
 
+	protected OrderController orderController = null;
+
+	protected void buttonABehavior() {
+		bool buttonAPressed = false;
+		if (handType == HandType.LeftHand) return;
+		else buttonAPressed = (OVRInput.Get(OVRInput.Button.One));
+		if (buttonAPressed == buttonAPressedPreviousFrame) return;
+		buttonAPressedPreviousFrame = buttonAPressed;
+
+		if (buttonAPressed) {
+			orderController.popStatus();
+		}
+	}
+
+	protected void buttonXBehavior() {
+		bool buttonXPressed = false;
+		if (handType == HandType.LeftHand) buttonXPressed = (OVRInput.Get(OVRInput.Button.Three));
+		else return;
+		if (buttonXPressed == buttonXPressedPreviousFrame) return;
+		buttonXPressedPreviousFrame = buttonXPressed;
+
+		if (buttonXPressed) {
+			orderController.closeMessage();
+		}
+	}
+
 	protected bool releaseObject(GameObject grabbedObject) {
 		if (grabbedObject == null) return false;
 		Vector3 velocity = (recentPosition[0] - recentPosition[3]) * 20.0f;
@@ -161,7 +194,7 @@ public class HandController : MonoBehaviour {
 		if (this.grabbedObjectType == typeof(Container)) {
 			this.grabbedObject = null;
 			Container container = grabbedObject.GetComponent<Container>();
-			container.released(this);
+			container.released(this, velocity);
 			grabbedObjectType = null;
 			return true;
 		}
@@ -248,6 +281,9 @@ public class HandController : MonoBehaviour {
 		playerController.getOffBike();
 	}
 
+	protected bool hasOrt = false;
+	protected Quaternion ort;
+
 	protected void moveWithBike() {
 		if (handType != HandType.RightHand) return;
 		Vector3 handle = new Vector3(0.0f, 1f, 1f);
@@ -258,17 +294,25 @@ public class HandController : MonoBehaviour {
 		Vector3 handleDir = rawRotation * handle;
 		Vector3 handleNDir = rawRotation * handleN;
 		if ((handleDir.y > -0.2) && (handleDir.y < 0.2)) {
-			Quaternion ort = playerController.transform.rotation;
-			Vector3 ortEuler = ort.eulerAngles;
+			Quaternion ortTry = playerController.transform.rotation;
+			Vector3 ortEuler = ortTry.eulerAngles;
 			ortEuler.z = ortEuler.x = 0f;
-			ort = Quaternion.Euler(ortEuler);
+			if (!hasOrt) {
+				ort = Quaternion.Euler(ortEuler);
+				hasOrt = true;
+				eBike.setRotation(ort);
+			}
 			if (handleNDir.y < -0.1f) {
 				if (handleNDir.y > -1f + 1e-7) handleNDir.y = (float) (-1f + 1e-7);
 				float theta = Mathf.Asin(-handleNDir.y) / Mathf.PI * 2;
 				//Debug.LogWarningFormat("HandController: handle {0}, handleNormal {1}, theta {2}", handleDir, handleNDir, theta);
 				Vector3 move = ort * (0.1f * theta * Vector3.forward);
 				playerController.transform.position += move;
+			} else {
+				hasOrt = false;
 			}
+		} else {
+			hasOrt = false;
 		}
 	}
 

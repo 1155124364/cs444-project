@@ -40,6 +40,13 @@ public class EBike : MonoBehaviour
         subColliders = gameObject.GetComponentsInChildren<Collider>();
     }
 
+    public void setRotation(Quaternion rotation) {
+        Vector3 euler = rotation.eulerAngles;
+        euler.x = 0;
+        euler.z = 0;
+        this.transform.rotation = Quaternion.Euler(euler);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -52,7 +59,7 @@ public class EBike : MonoBehaviour
             mainRotation.z = 0;
             mainPosition.y = 0;
             mainPlayerController.myMoveTo(mainPosition);
-            this.transform.rotation = Quaternion.Euler(mainRotation);
+            // this.transform.rotation = Quaternion.Euler(mainRotation);
             this.transform.position = mainPosition;
         }
     }

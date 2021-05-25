@@ -993,7 +993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71543986331673d45b01d4c7ed141a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelPrefab: {fileID: 0}
+  panelPrefab: {fileID: 5787771676184146232, guid: 000e93764ab186d429dec9ee52c34334, type: 3}
 --- !u!1 &449189559351411686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2191,4 +2191,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71543986331673d45b01d4c7ed141a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelPrefab: {fileID: 0}
+  panelPrefab: {fileID: 7614263627562773517, guid: d4ea2817e7c84464cb4785982148fcff, type: 3}

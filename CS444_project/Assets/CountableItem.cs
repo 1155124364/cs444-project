@@ -60,6 +60,7 @@ public class CountableItem : MonoBehaviour {
     }
 
     public void contained(Container container) {
+        this.container = container;
         rigidbody.useGravity = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeAll;
         this.transform.SetParent(container.transform);
