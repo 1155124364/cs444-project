@@ -1,6 +1,6 @@
 /*
     Order.cs
-    Description: the class for orders, contains order destination and item information.
+    Description: Class for orders, contains order destination and item information.
 */
 
 using System.Collections;

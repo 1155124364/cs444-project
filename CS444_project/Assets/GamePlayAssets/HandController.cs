@@ -1,31 +1,60 @@
+/*
+	HandController.cs
+	Description: Control the behavior of the hand controller, mainly the interaction part.
+*/
+
 using UnityEngine;
 using System;
 using System.Collections.Generic;
 
 public class HandController : MonoBehaviour {
 
-	// Store the hand type to know which button should be pressed
+	// 
 	public enum HandType : int { LeftHand, RightHand };
 	[Header( "Hand Properties" )]
 	public HandType handType;
-
-
-	// Store the player controller to forward it to the object
 	[Header( "Player Controller" )]
 	public MainPlayerController playerController;
-
-
-
-	// Store all gameobjects containing an Anchor
-	// N.B. This list is static as it is the same list for all hands controller
-	// thus there is no need to duplicate it for each instance
-	static protected ObjectAnchor[] anchors_in_the_scene;
+	[Header("Beamer")]
+	public GameObject beamerPrefab;
+	[Header("Marker")]
+	public GameObject markerPrefab;
 
 	static protected EBike eBike;
+	protected bool triggerPulledPreviousFrame = false;
 
+	protected bool buttonBYPressedPreviousFrame = false;
+	protected bool buttonAPressedPreviousFrame = false;
+	protected bool buttonXPressedPreviousFrame = false;
+	protected bool remoteGrab = false;
+
+
+	protected GameObject beamer = null;
+	protected GameObject marker = null;
+	
+	protected Vector3 originalPointingDirection;
+
+	protected GameObject pointedObject = null;
+	protected GameObject grabbedObject = null;
+	protected Type grabbedObjectType;
+
+	protected float maximumRemoteGrabDistance = 5.0f;
+	protected OrderController orderController = null;
+
+	protected bool hasOrt = false;
+	protected Quaternion ort;
+
+	// Store the previous state of triggers to detect edges
+	protected bool is_hand_closed_previous_frame = false;
+
+	// Store the object atached to this hand
+	// N.B. This can be extended by using a list to attach several objects at the same time
+	protected ObjectAnchor object_grasped = null;
+
+	protected Vector3[] recentPosition;
+	
 	void Start () {
-		// Prevent multiple fetch
-		if ( anchors_in_the_scene == null ) anchors_in_the_scene = GameObject.FindObjectsOfType<ObjectAnchor>();
+		// Get the needed object references when start.
 		if (playerController == null) playerController = GameObject.FindObjectOfType<MainPlayerController>();
 		if (eBike == null) eBike = GameObject.FindObjectOfType<EBike>();
 		if (orderController == null) orderController = GameObject.FindObjectOfType<OrderController>();
@@ -54,7 +83,6 @@ public class HandController : MonoBehaviour {
 			&& OVRInput.Get( OVRInput.Axis1D.SecondaryIndexTrigger ) > 0.5; // Check that the index finger is pressing
 	}
 
-
 	// Automatically called at each frame
 	void Update () {
 		for (int i = 3; i > 0; i--) {
@@ -74,33 +102,8 @@ public class HandController : MonoBehaviour {
 		} else {
 			hasOrt = false;
 		}
-		// handle_controller_behavior();
 		anchors_in_the_scene = GameObject.FindObjectsOfType<ObjectAnchor>();
 	}
-
-	protected bool triggerPulledPreviousFrame = false;
-
-	protected bool buttonBYPressedPreviousFrame = false;
-	protected bool buttonAPressedPreviousFrame = false;
-	protected bool buttonXPressedPreviousFrame = false;
-	protected bool remoteGrab = false;
-
-
-	[Header("Beamer")]
-	public GameObject beamerPrefab;
-	[Header("Marker")]
-	public GameObject markerPrefab;
-
-	protected GameObject beamer = null;
-	protected GameObject marker = null;
-	
-	protected Vector3 originalPointingDirection;
-
-	protected GameObject pointedObject = null;
-	protected GameObject grabbedObject = null;
-	protected Type grabbedObjectType;
-
-	protected float maximumRemoteGrabDistance = 5.0f;
 
 	protected bool getTargetPoint(Vector3 position, Vector3 direction, out Vector3 targetPoint, out Collider objectCollider) {
 		targetPoint = new Vector3();
@@ -151,12 +154,9 @@ public class HandController : MonoBehaviour {
 			if (playerController.isOnBike()) return;
 			if (grabbedObject != null) return;
 			remoteGrab = !remoteGrab;
-			Debug.LogWarningFormat("remote Grab {0}!", remoteGrab);
 			if (!remoteGrab) destroyGrabUI();
 		}
 	}
-
-	protected OrderController orderController = null;
 
 	protected void buttonABehavior() {
 		bool buttonAPressed = false;
@@ -211,7 +211,6 @@ public class HandController : MonoBehaviour {
 
 	protected bool grabObject(GameObject grabbedObject) {
 		if (grabbedObject == null) return false;
-		Debug.LogWarningFormat("try to grab GameObject name: {0}", grabbedObject.name);
 		CountableItem countableItem = grabbedObject.GetComponent<CountableItem>();
 		if (countableItem != null) {
 			this.grabbedObject = grabbedObject;
@@ -252,7 +251,6 @@ public class HandController : MonoBehaviour {
 		triggerPulledPreviousFrame = triggerPulled;
 
 		if (triggerPulled) {
-			Debug.LogWarning("trigger pulled!");
 
 			if (playerController.isOnBike()) {
 				checkGetOffBike();
@@ -271,7 +269,6 @@ public class HandController : MonoBehaviour {
 
 	protected void checkGetOnBike() {
 		float bikeDistance = Vector3.Distance(this.transform.position, eBike.transform.position);
-		Debug.LogWarningFormat("bikeDistance = {0}", bikeDistance);
 		if (bikeDistance < 1.5f) {
 			remoteGrab = false;
 			playerController.rideBike();
@@ -281,9 +278,6 @@ public class HandController : MonoBehaviour {
 	protected void checkGetOffBike() {
 		playerController.getOffBike();
 	}
-
-	protected bool hasOrt = false;
-	protected Quaternion ort;
 
 	protected void moveWithBike() {
 		if (handType != HandType.RightHand) return;
@@ -317,81 +311,4 @@ public class HandController : MonoBehaviour {
 		}
 	}
 
-	// Store the previous state of triggers to detect edges
-	protected bool is_hand_closed_previous_frame = false;
-
-	// Store the object atached to this hand
-	// N.B. This can be extended by using a list to attach several objects at the same time
-	protected ObjectAnchor object_grasped = null;
-
-	protected Vector3[] recentPosition;
-
-	/// <summary>
-	/// This method handles the linking of object anchors to this hand controller
-	/// </summary>
-	protected void handle_controller_behavior () {
-
-		// Check if there is a change in the grasping state (i.e. an edge) otherwise do nothing
-		bool hand_closed = is_hand_closed();
-		if ( hand_closed == is_hand_closed_previous_frame ) return;
-		is_hand_closed_previous_frame = hand_closed;
-
-
-
-		//==============================================//
-		// Define the behavior when the hand get closed //
-		//==============================================//
-		if ( hand_closed ) {
-
-			// Log hand action detection
-			Debug.LogWarningFormat( "{0} get closed", this.transform.parent.name );
-
-			// Determine which object available is the closest from the left hand
-			int best_object_id = -1;
-			float best_object_distance = float.MaxValue;
-			float oject_distance;
-
-			// Iterate over objects to determine if we can interact with it
-			for ( int i = 0; i < anchors_in_the_scene.Length; i++ ) {
-
-				// Skip object not available
-				if ( !anchors_in_the_scene[i].is_available() ) continue;
-
-				// Compute the distance to the object
-				oject_distance = Vector3.Distance( this.transform.position, anchors_in_the_scene[i].transform.position );
-
-				// Keep in memory the closest object
-				// N.B. We can extend this selection using priorities
-				if ( oject_distance < best_object_distance && oject_distance <= anchors_in_the_scene[i].get_grasping_radius() ) {
-					best_object_id = i;
-					best_object_distance = oject_distance;
-				}
-			}
-
-			// If the best object is in range grab it
-			if ( best_object_id != -1 ) {
-
-				// Store in memory the object grasped
-				object_grasped = anchors_in_the_scene[best_object_id];
-
-				// Log the grasp
-				Debug.LogWarningFormat( "{0} grasped {1}", this.transform.parent.name, object_grasped.name );
-
-				// Grab this object
-				object_grasped.attach_to( this );
-			}
-
-
-
-		//==============================================//
-		// Define the behavior when the hand get opened //
-		//==============================================//
-		} else if ( object_grasped != null ) {
-			// Log the release
-			Debug.LogWarningFormat("{0} released {1}", this.transform.parent.name, object_grasped.name );
-
-			// Release the object
-			object_grasped.detach_from( this );
-		}
-	}
 }
