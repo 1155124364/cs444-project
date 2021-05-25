@@ -58,7 +58,6 @@ public class MainPlayerController : MonoBehaviour {
 
 		// Call the ride on method of e-bike.
 		eBike.rideOn(this);
-
 	}
 
 	// Public method for the player to get off the bike.
@@ -101,4 +100,5 @@ public class MainPlayerController : MonoBehaviour {
 			eBike = GameObject.FindObjectOfType<EBike>();
 		}
 	}
+	
 }

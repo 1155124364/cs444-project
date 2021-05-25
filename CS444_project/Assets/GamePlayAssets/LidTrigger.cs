@@ -24,4 +24,5 @@ public class LidTrigger : MonoBehaviour {
             lid.setOnBox(container);
         }
     }
+    
 }

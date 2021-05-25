@@ -14,8 +14,7 @@ public class Chef : MonoBehaviour {
 
     // Start is called before the first frame update
     // When start, set the default refresh position.
-    void Start()
-    {
+    void Start() {
         defaultRefreshPosition = new Vector3(-3.3f, 1.5f, 15.5f);
     }
 

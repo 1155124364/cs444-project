@@ -41,7 +41,6 @@ public class Lid : MonoBehaviour {
         Vector3 y = new Vector3(0f, 0.36f, 0f);
         this.transform.position += container.transform.rotation * y;
         this.transform.SetParent(container.transform);
-
     }
     
     // Public method remoteGrabbed
@@ -66,7 +65,6 @@ public class Lid : MonoBehaviour {
 
         // Store the reference of the hand controller
         this.handController = handController;
-
     }
 
     // Public method called by the hand controller, when the player releases the lid from hand.
@@ -82,7 +80,6 @@ public class Lid : MonoBehaviour {
         rigidbody.useGravity = true;
         rigidbody.constraints = RigidbodyConstraints.None;
         rigidbody.velocity = velocity;
-
     }
 
     // Start is called before the first frame update
@@ -128,4 +125,5 @@ public class Lid : MonoBehaviour {
             this.transform.position = reset;
         }
     }
+    
 }
