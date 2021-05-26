@@ -37,9 +37,8 @@ public class Slicer : MonoBehaviour {
     // When there is a collision
     void OnCollisionEnter(Collision other) {
         time_diff = Time.time - old_time;
-        if (time_diff >= 1 && other.gameObject.tag == "Slicable") {
+        if (time_diff > 0.5 && other.gameObject.tag == "Slicable") {
             slice(other);
-            old_time = Time.time;
         }
     }
 
@@ -50,8 +49,8 @@ public class Slicer : MonoBehaviour {
 
         // Create cutting plane
         Vector3 vec1 = coll.bounds.center;
-        Vector3 vec2 = coll.bounds.center + transform.right * coll.bounds.min.x;
-        Vector3 vec3 = coll.bounds.center + transform.up * coll.bounds.max.y;
+        Vector3 vec2 = coll.bounds.center + transform.up;
+        Vector3 vec3 = coll.bounds.center + Vector3.Cross(transform.up, transform.right);
 
         Plane plane = new Plane(vec1, vec2, vec3);
 
@@ -310,6 +309,10 @@ public class Slicer : MonoBehaviour {
             gameObjectBelow.transform.position = other.transform.position;
             
             Destroy(other.gameObject);
+
+            if (intersections.Count != 0){
+                old_time = Time.time;
+            }
         }
     }
 }

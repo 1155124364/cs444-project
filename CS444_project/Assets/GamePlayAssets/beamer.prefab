@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8881434876138154388}
   - component: {fileID: 1102378268528183303}
   - component: {fileID: 7073198295682315578}
+  - component: {fileID: 2721278447302334363}
   m_Layer: 0
   m_Name: beamer
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4365888944449942126}
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: -3.0566924, y: 1.7224503, z: 15.302082}
-  m_LocalScale: {x: 0.01, y: 0.3, z: 0.01}
+  m_LocalScale: {x: 0.01, y: 0.3, z: 0.02}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -104,8 +105,21 @@ MeshCollider:
   m_GameObject: {fileID: 4365888944449942126}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &2721278447302334363
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4365888944449942126}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000001, y: 2, z: 4}
+  m_Center: {x: 0, y: 0, z: 0}
